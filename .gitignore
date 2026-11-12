@@ -1,0 +1,57 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.sln.docstates
+.vs/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Visual Studio
+.vs/
+*.sln.ide/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AI 助手本地工作目录（记忆 / 会话日志，不上传）
+.workbuddy/
+
+# 项目特定
+# 本地数据库（如果你把 .db 放在仓库目录下）
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# 参考资料 / 截图
+verify/
+shot_*.png
+
+# Project specific
+!Libs/*.dll

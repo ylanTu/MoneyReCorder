@@ -1,0 +1,71 @@
+<Window x:Class="MoneyReCorder.Views.PetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:MoneyReCorder.Controls"
+        mc:Ignorable="d"
+        Title="Pet"
+        Width="116"
+        Height="136"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="0"
+                      CornerRadius="0"
+                      ResizeBorderThickness="0"
+                      CaptionHeight="0" />
+    </WindowChrome.WindowChrome>
+
+    <Grid>
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="打开主窗口" Click="OpenMainWindow_Click" />
+                <MenuItem Header="隐藏桌宠" Click="HidePet_Click" />
+                <Separator />
+                <MenuItem Header="退出 MoneyReCorder" Click="ExitApp_Click" />
+            </ContextMenu>
+        </Grid.ContextMenu>
+
+        <!-- 占位形象：Spine 资源就绪时会覆盖显示真正的骨骼动画 -->
+        <StackPanel VerticalAlignment="Top">
+            <Border Width="104" Height="104" CornerRadius="52"
+                    HorizontalAlignment="Center"
+                    Background="{DynamicResource BgCardBrush}"
+                    BorderBrush="{DynamicResource PrimaryBrush}"
+                    BorderThickness="2"
+                    ToolTip="拖动移动 · 双击打开主窗口 · 右键更多">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="18" ShadowDepth="2" Opacity="0.18" Color="#000000" />
+                </Border.Effect>
+                <Grid>
+                    <Ellipse Margin="10" Fill="{DynamicResource PrimaryLightBrush}" Opacity="0.9" />
+                    <TextBlock Text="💰" FontSize="40"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+            </Border>
+
+            <Border HorizontalAlignment="Center" Margin="0,6,0,0"
+                    Background="{DynamicResource SurfaceBrush}"
+                    CornerRadius="9" Padding="8,2">
+                <TextBlock Text="双击记账" FontSize="10"
+                           Foreground="{DynamicResource TextSecondaryBrush}" />
+            </Border>
+        </StackPanel>
+
+        <!-- Spine 动画控件（SPINE_ENABLED 且有资源时才会绘制） -->
+        <controls:SpineView x:Name="SpineControl"
+                            Width="116" Height="136"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            SpineDataFolder="Resources/Spine"
+                            SkeletonFileName="pet.skel"
+                            AtlasFileName="pet.atlas"
+                            DefaultAnimation="idle"
+                            AutoPlay="True" />
+    </Grid>
+</Window>

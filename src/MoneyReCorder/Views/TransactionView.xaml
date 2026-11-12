@@ -1,0 +1,238 @@
+<UserControl x:Class="MoneyReCorder.Views.TransactionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:MoneyReCorder.ViewModels"
+             xmlns:models="clr-namespace:MoneyReCorder.Models"
+             xmlns:converters="clr-namespace:MoneyReCorder.Converters"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:TransactionViewModel}">
+
+    <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <converters:TransactionTypeToColorConverter x:Key="TypeColorConverter" />
+        <converters:AmountDisplayConverter x:Key="AmountConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- ===== 筛选栏 ===== -->
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="32,24,32,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="📅 从"
+                           VerticalAlignment="Center" Margin="0,0,8,0" />
+                <DatePicker Grid.Column="1" SelectedDate="{Binding FilterStartDate}"
+                            Margin="0,0,16,0" />
+
+                <TextBlock Grid.Column="2" Text="到"
+                           VerticalAlignment="Center" Margin="0,0,8,0" />
+                <DatePicker Grid.Column="3" SelectedDate="{Binding FilterEndDate}"
+                            Margin="0,0,16,0" />
+
+                <StackPanel Grid.Column="4" Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <TextBlock Text="总收入: " VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               FontSize="13" />
+                    <TextBlock Text="{Binding TotalIncomeDisplay}"
+                               Foreground="{DynamicResource IncomeBrush}" FontWeight="Bold"
+                               VerticalAlignment="Center" FontSize="13" />
+                    <TextBlock Text="  |  " VerticalAlignment="Center"
+                               Foreground="{DynamicResource BorderBrush}" />
+                    <TextBlock Text="总支出: " VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               FontSize="13" />
+                    <TextBlock Text="{Binding TotalExpenseDisplay}"
+                               Foreground="{DynamicResource DangerBrush}" FontWeight="Bold"
+                               VerticalAlignment="Center" FontSize="13" />
+                </StackPanel>
+
+                <Button Grid.Column="5" Content="🔍 查询"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Command="{Binding LoadTransactionsCommand}"
+                        Margin="16,0,0,0" />
+            </Grid>
+        </Border>
+
+        <!-- ===== 操作栏 ===== -->
+        <Border Grid.Row="1" Margin="32,12,32,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="📝 交易明细"
+                           FontSize="18" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="+ 记一笔"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Command="{Binding ToggleAddFormCommand}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ===== 新增交易表单 ===== -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}"
+                Visibility="{Binding ShowAddForm, Converter={StaticResource BoolToVis}}"
+                Margin="32,58,32,0">
+            <StackPanel>
+                <TextBlock Text="新增交易" FontSize="16" FontWeight="SemiBold"
+                           Margin="0,0,0,12" />
+
+                <!-- 类型切换 -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <RadioButton Content="支出" GroupName="TransType"
+                                 Margin="0,0,16,0" FontSize="14"
+                                 Command="{Binding SetFormTypeCommand}"
+                                 CommandParameter="{x:Static models:TransactionType.Expense}" />
+                    <RadioButton Content="收入" GroupName="TransType"
+                                 FontSize="14"
+                                 Command="{Binding SetFormTypeCommand}"
+                                 CommandParameter="{x:Static models:TransactionType.Income}" />
+                </StackPanel>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="账户"
+                               VerticalAlignment="Center" Margin="0,0,12,8" />
+                    <ComboBox Grid.Row="0" Grid.Column="1"
+                              ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.Accounts}"
+                              SelectedValuePath="Id"
+                              DisplayMemberPath="Name"
+                              SelectedValue="{Binding FormAccountId}"
+                              Margin="0,0,0,8" Padding="8" />
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="分类"
+                               VerticalAlignment="Center" Margin="0,0,12,8" />
+                    <ComboBox Grid.Row="1" Grid.Column="1"
+                              ItemsSource="{Binding Categories}"
+                              SelectedValuePath="Id"
+                              DisplayMemberPath="Name"
+                              SelectedValue="{Binding FormCategoryId}"
+                              Margin="0,0,0,8" Padding="8" />
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="金额"
+                               VerticalAlignment="Center" Margin="0,0,12,8" />
+                    <TextBox Grid.Row="2" Grid.Column="1"
+                             Text="{Binding FormAmountText}"
+                             Style="{StaticResource TextBoxStyle}"
+                             Margin="0,0,0,8" />
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="日期"
+                               VerticalAlignment="Center" Margin="0,0,12,8" />
+                    <DatePicker Grid.Row="3" Grid.Column="1"
+                                SelectedDate="{Binding FormDate}"
+                                Margin="0,0,0,8" />
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="备注"
+                               VerticalAlignment="Center" Margin="0,0,12,8" />
+                    <TextBox Grid.Row="4" Grid.Column="1"
+                             Text="{Binding FormDescription}"
+                             Style="{StaticResource TextBoxStyle}"
+                             Margin="0,0,0,8" />
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button Content="确定添加" Style="{StaticResource PrimaryButtonStyle}"
+                            Command="{Binding AddTransactionCommand}" />
+                    <Button Content="取消" Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding ToggleAddFormCommand}"
+                            Margin="8,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- ===== 交易列表 ===== -->
+        <ScrollViewer Grid.Row="2" Margin="32,12,32,24">
+            <ItemsControl ItemsSource="{Binding Transactions}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardStyle}" Margin="0,0,0,6" Padding="14,10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- 分类图标 -->
+                                <Border Grid.Column="0" Width="38" Height="38"
+                                        CornerRadius="19"
+                                        Background="{DynamicResource PrimaryLightBrush}">
+                                    <TextBlock Text="{Binding Category.Icon, FallbackValue='📌'}"
+                                               FontSize="18"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Border>
+
+                                <!-- 详情 -->
+                                <StackPanel Grid.Column="1" Margin="12,0,0,0"
+                                            VerticalAlignment="Center">
+                                    <TextBlock FontSize="13" FontWeight="SemiBold">
+                                        <Run Text="{Binding Category.Name, FallbackValue='未分类'}" />
+                                        <Run Text="-" />
+                                        <Run Text="{Binding Description, TargetNullValue='无备注'}"
+                                             Foreground="{DynamicResource TextSecondaryBrush}" />
+                                    </TextBlock>
+                                    <TextBlock FontSize="11"
+                                               Foreground="{DynamicResource TextSecondaryBrush}"
+                                               Margin="0,2,0,0">
+                                        <Run Text="{Binding Account.Name}" />
+                                        <Run Text="·" />
+                                        <Run Text="{Binding TransactionDate, StringFormat={}{0:MM月dd日}}" />
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <!-- 金额 -->
+                                <TextBlock Grid.Column="2"
+                                           Text="{Binding Amount, StringFormat={}{0:N2}}"
+                                           FontSize="16" FontWeight="Bold"
+                                           Foreground="{Binding Type, Converter={StaticResource TypeColorConverter}}"
+                                           VerticalAlignment="Center" Margin="0,0,12,0" />
+
+                                <!-- 删除 -->
+                                <Button Grid.Column="3" Content="✕"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Foreground="{DynamicResource TextSecondaryBrush}"
+                                        FontSize="14" Cursor="Hand"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.DeleteTransactionCommand}"
+                                        CommandParameter="{Binding}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

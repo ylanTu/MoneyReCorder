@@ -1,0 +1,171 @@
+<Window x:Class="MoneyReCorder.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:MoneyReCorder.ViewModels"
+        xmlns:views="clr-namespace:MoneyReCorder.Views"
+        xmlns:converters="clr-namespace:MoneyReCorder.Converters"
+        mc:Ignorable="d"
+        Title="MoneyReCorder - 账目记录"
+        Width="1100" Height="720"
+        MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        d:DataContext="{d:DesignInstance vm:MainViewModel}">
+
+    <Window.Resources>
+        <converters:AmountDisplayConverter x:Key="AmountConverter" />
+        <converters:TransactionTypeToColorConverter x:Key="TypeColorConverter" />
+        <converters:PageEqualsConverter x:Key="PageEqualsConverter" />
+    </Window.Resources>
+
+    <Grid Background="{DynamicResource BgPrimaryBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- =========== 侧边栏 =========== -->
+        <Border Grid.Column="0" Background="{DynamicResource BgCardBrush}">
+            <Grid Margin="16,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Logo & 应用名 -->
+                <StackPanel Grid.Row="0" Margin="0,24,0,32">
+                    <TextBlock Text="💰" FontSize="32" />
+                    <TextBlock Text="MoneyReCorder"
+                               FontSize="20" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"
+                               Margin="0,8,0,4" />
+                    <TextBlock Text="个人账目管理"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextSecondaryBrush}" />
+                </StackPanel>
+
+                <!-- 导航菜单 -->
+                <StackPanel Grid.Row="1">
+                    <RadioButton GroupName="Nav"
+                                 Style="{StaticResource NavButtonStyle}"
+                                 Command="{Binding NavigateToCommand}"
+                                 CommandParameter="Dashboard"
+                                 IsChecked="{Binding CurrentPage, Mode=OneWay,
+                                                     Converter={StaticResource PageEqualsConverter},
+                                                     ConverterParameter=Dashboard}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📊" FontSize="16" />
+                            <TextBlock Text="  总览" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton GroupName="Nav"
+                                 Style="{StaticResource NavButtonStyle}"
+                                 Command="{Binding NavigateToCommand}"
+                                 CommandParameter="Account"
+                                 IsChecked="{Binding CurrentPage, Mode=OneWay,
+                                                     Converter={StaticResource PageEqualsConverter},
+                                                     ConverterParameter=Account}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="💳" FontSize="16" />
+                            <TextBlock Text="  账户" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton GroupName="Nav"
+                                 Style="{StaticResource NavButtonStyle}"
+                                 Command="{Binding NavigateToCommand}"
+                                 CommandParameter="Transaction"
+                                 IsChecked="{Binding CurrentPage, Mode=OneWay,
+                                                     Converter={StaticResource PageEqualsConverter},
+                                                     ConverterParameter=Transaction}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📝" FontSize="16" />
+                            <TextBlock Text="  流水" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton GroupName="Nav"
+                                 Style="{StaticResource NavButtonStyle}"
+                                 Command="{Binding NavigateToCommand}"
+                                 CommandParameter="Statistics"
+                                 IsChecked="{Binding CurrentPage, Mode=OneWay,
+                                                     Converter={StaticResource PageEqualsConverter},
+                                                     ConverterParameter=Statistics}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📈" FontSize="16" />
+                            <TextBlock Text="  统计" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton GroupName="Nav"
+                                 Style="{StaticResource NavButtonStyle}"
+                                 Command="{Binding NavigateToCommand}"
+                                 CommandParameter="Settings"
+                                 IsChecked="{Binding CurrentPage, Mode=OneWay,
+                                                     Converter={StaticResource PageEqualsConverter},
+                                                     ConverterParameter=Settings}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="⚙️" FontSize="16" />
+                            <TextBlock Text="  设置" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+
+                <!-- 底部快捷信息 -->
+                <StackPanel Grid.Row="2" Margin="0,16,0,16"
+                            VerticalAlignment="Bottom">
+                    <Border Style="{StaticResource CardStyle}" Padding="12">
+                        <StackPanel>
+                            <TextBlock Text="总资产" FontSize="12"
+                                       Foreground="{DynamicResource TextSecondaryBrush}" />
+                            <TextBlock Text="{Binding TotalBalanceDisplay}"
+                                       FontSize="18" FontWeight="Bold"
+                                       Foreground="{DynamicResource PrimaryBrush}"
+                                       Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- =========== 内容区域 =========== -->
+        <Grid Grid.Column="1" Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- 顶部栏 -->
+            <Border Grid.Row="0" Background="{DynamicResource BgCardBrush}"
+                    Padding="24,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" FontSize="22" FontWeight="SemiBold"
+                               VerticalAlignment="Center">
+                        <Run Text="{Binding CurrentPageTitle, Mode=OneWay}" />
+                    </TextBlock>
+
+                    <Button Grid.Column="1" Content="🔄 刷新"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding LoadDataCommand}" />
+                </Grid>
+            </Border>
+
+            <!-- 页面内容 -->
+            <Grid Grid.Row="1">
+                <views:DashboardView x:Name="PageDashboard" />
+                <views:AccountView x:Name="PageAccount" />
+                <views:TransactionView x:Name="PageTransaction" />
+                <views:StatisticsView x:Name="PageStatistics" />
+                <views:SettingsView x:Name="PageSettings" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

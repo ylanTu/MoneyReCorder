@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <!-- 仅用于托盘图标（System.Windows.Forms.NotifyIcon） -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>MoneyReCorder</RootNamespace>
+    <AssemblyName>MoneyReCorder</AssemblyName>
+    <!-- Spine 桌宠功能: 获取 Spine.dll 放入 Libs/ 后取消下一行注释 -->
+    <!-- <DefineConstants>SPINE_ENABLED</DefineConstants> -->
+  </PropertyGroup>
+
+  <!-- 同时启用 WPF 与 WinForms 时会注入 WinForms 隐式 using，此处移除避免类型歧义 -->
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-preview.3.25171.5" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.4" />
+  </ItemGroup>
+
+  <!-- Spine C# Runtime: 从 Esoteric Software 获取 Spine.dll 放入 Libs/ 目录后取消注释 -->
+  <!--
+  <ItemGroup Condition="Exists('Libs\Spine.dll')">
+    <Reference Include="Spine" HintPath="Libs\Spine.dll" />
+  </ItemGroup>
+  -->
+</Project>
