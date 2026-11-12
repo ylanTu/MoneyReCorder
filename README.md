@@ -18,7 +18,7 @@ MoneyReCorder 就是把这件事收拢到一个地方：一台常驻桌角的 Wi
 
 ## 📋 项目概述
 
-一款 Windows 桌面个人账目管理软件，支持记账、账户管理、消费统计、桌面悬浮余额显示和 Spine 桌宠。
+一款 Windows 桌面个人账目管理软件，支持记账、账户管理、消费统计和桌面悬浮余额显示。
 
 ### 技术栈
 
@@ -26,7 +26,6 @@ MoneyReCorder 就是把这件事收拢到一个地方：一台常驻桌角的 Wi
 - **架构**: MVVM (CommunityToolkit.Mvvm)
 - **数据库**: SQLite (Microsoft.Data.Sqlite)
 - **图表**: LiveChartsCore (SkiaSharp)
-- **桌宠**: Spine C# Runtime + SkiaSharp 渲染
 
 ## 🚀 快速开始
 
@@ -63,7 +62,6 @@ dotnet run --project src/MoneyReCorder/MoneyReCorder.csproj
 | 窗口 | 位置 | 说明 |
 |------|------|------|
 | 💳 **桌面小组件** | 右下角 | 默认一颗小球，鼠标悬停展开明细，双击进设置 |
-| 🐾 **桌宠** | 左下角 | 可选，需配置 Spine 资源；未配置时**不创建也不显示**（避免与小球重复） |
 | 📒 **主窗口** | 居中 | 完整记账功能，侧边栏导航（从小组件 / 托盘打开） |
 
 > 打开主窗口时浮窗会自动隐藏（可在设置中关闭），关闭主窗口后自动恢复；
@@ -76,18 +74,7 @@ dotnet run --project src/MoneyReCorder/MoneyReCorder.csproj
 - 三种形态可在「设置 → 悬浮窗形态」或浮窗右键菜单切换：小球 / 胶囊 / 完整卡片
 - **双击浮窗** → 打开主窗口并直接进入设置页
 - 拖动可移动位置，落点会记住；锁定后位置固定
-- 透明度独立可调（小组件 / 主窗口 / 桌宠三档）
-
-### Spine 桌宠配置
-
-如需启用桌宠功能：
-
-1. 从 [Esoteric Software](https://esotericsoftware.com/) 获取 Spine C# Runtime
-2. 将 `Spine.dll` 放入 `src/MoneyReCorder/Libs/` 目录
-3. 准备 Spine 资源文件（`.skel`/`.json` + `.atlas` + `.png`）
-4. 将资源放入 `src/MoneyReCorder/Resources/Spine/` 目录
-5. 取消 `MoneyReCorder.csproj` 中 Spine 引用的注释
-6. 在 `Views/PetWindow.xaml` 中配置 Spine 文件名
+- 透明度独立可调（小组件 / 主窗口两档）
 
 ## 📁 项目结构
 
@@ -97,7 +84,6 @@ MoneyReCorder/
 │   ├── App.xaml(.cs)           # 应用入口 + DI 容器
 │   ├── MainWindow.xaml(.cs)    # 主窗口（侧边栏导航）
 │   ├── WidgetWindow.xaml(.cs)  # 桌面悬浮小组件
-│   ├── PetWindow.xaml(.cs)     # Spine 桌宠窗口
 │   ├── Models/                 # 数据模型
 │   │   ├── Account.cs          # 账户模型
 │   │   ├── Transaction.cs      # 交易记录
@@ -128,11 +114,7 @@ MoneyReCorder/
 │   │   ├── AccountRepository.cs    # 账户仓储
 │   │   ├── TransactionRepository.cs # 交易仓储
 │   │   └── CategoryRepository.cs    # 分类仓储
-│   ├── Controls/               # 自定义控件
-│   │   └── SpineView.cs        # Spine 动画控件
 │   ├── Converters/             # 值转换器
-│   ├── Spine/                  # Spine 渲染器
-│   │   └── SpineRenderer.cs    # SkiaSharp 渲染器
 │   └── Styles/
 │       └── Themes.xaml         # 主题样式
 └── README.md
@@ -153,11 +135,6 @@ MoneyReCorder/
 - **交易流水**: 按日期/账户/分类筛选，记账
 - **统计**: 月度收支柱状图 + 分类支出饼图
 - **设置**: 皮肤（10 套明暗配色）、主题色、窗口透明度、悬浮窗形态（小球/胶囊/卡片）、浮窗显隐与置顶
-
-### 🐾 Spine 桌宠
-- Spine 骨骼动画播放
-- 悬停/点击交互反馈
-- 可拖拽、置顶显示
 
 ## 🔮 未来扩展
 
